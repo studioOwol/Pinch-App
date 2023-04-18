@@ -64,6 +64,27 @@ struct ContentView: View {
                                 }
                             }
                     )
+                //MARK: - 3. MAGNIFICATION
+                    .gesture(
+                        MagnificationGesture()
+                            .onChanged{ value in
+                                withAnimation(.linear(duration: 1)){
+                                    if imageScale >= 1 && imageScale <= 5 {
+                                        imageScale = value
+                                    } else if imageScale > 5 {
+                                        imageScale = 5
+                                    }
+                                }
+                            }
+                            .onEnded{ _ in
+                                if imageScale > 5 {
+                                    imageScale = 5
+                                } else if imageScale <= 1 {
+                                    resetImageState()
+                                }
+                            }
+                        
+                    )
             }//: ZStack
             .navigationTitle("Pinch & Zoom")
             .navigationBarTitleDisplayMode(.inline)
@@ -77,13 +98,13 @@ struct ContentView: View {
                 InfoPanelView(scale: imageScale, offset: imageOffset)
                     .padding(.horizontal)
                     .padding(.top, 30)
-                   , alignment: .top
+                , alignment: .top
             )
             //MARK: - CONTROLS
             .overlay(
                 Group{
                     HStack{
-                    // Scale Down
+                        // Scale Down
                         Button{
                             withAnimation(.spring()){
                                 if imageScale > 1{
@@ -96,14 +117,14 @@ struct ContentView: View {
                         } label: {
                             ControlImageView(icon: "minus.magnifyingglass")
                         }
-                    // Reset
+                        // Reset
                         Button{
                             resetImageState()
                         } label: {
                             ControlImageView(icon: "arrow.up.left.and.down.right.magnifyingglass")
                         }
-                    
-                    // Scale UP
+                        
+                        // Scale UP
                         Button{
                             withAnimation(.spring()){
                                 if imageScale < 5 {
